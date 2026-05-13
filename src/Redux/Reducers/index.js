@@ -6,7 +6,7 @@ const initialState = {
 
 const mainReducers = (state = initialState, action) => {
   switch (action.type) {
-    case "ADD_TO_FAVORITES": {
+    case "ADD_TO_FAVORITES":
       return {
         ...state,
         favorites: {
@@ -14,7 +14,21 @@ const mainReducers = (state = initialState, action) => {
           list: [...state.favorites.list, action.payload],
         },
       };
-    }
+
+    case "REMOVE_FAVORITES":
+      return {
+        ...state,
+        favorites: {
+          ...state.favorites,
+
+          list: state.favorites.list.filter(
+            (azienda) => azienda._id !== action.payload,
+          ),
+        },
+      };
+
+    default:
+      return state;
   }
 };
 
