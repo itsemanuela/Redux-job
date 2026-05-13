@@ -6,8 +6,15 @@ const initialState = {
 
 const mainReducers = (state = initialState, action) => {
   switch (action.type) {
-    default:
-      return state;
+    case "ADD_TO_FAVORITES": {
+      return {
+        ...state,
+        favorites: {
+          ...state.favorites,
+          list: [...state.favorites.list, action.payload],
+        },
+      };
+    }
   }
 };
 
