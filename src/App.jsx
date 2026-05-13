@@ -3,12 +3,14 @@ import "./App.css";
 import MainSearch from "./components/MainSearch";
 import CompanySearchResults from "./components/CompanySearchResults";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Dettaglio from "./components/dettaglio";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<MainSearch />} />
         <Route path="/:company" element={<CompanySearchResults />} />
+        <Route path="/favorites" element={<Dettaglio />} />
       </Routes>
     </BrowserRouter>
   );
