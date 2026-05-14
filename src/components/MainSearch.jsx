@@ -1,10 +1,17 @@
 import { useState } from "react";
-import { Container, Row, Col, Form, Button } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Spinner,
+  Alert,
+} from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Star, StarFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import Job from "./Job";
-
 import {
   addToFavoriteAction,
   removeFavoritesAction,
@@ -13,21 +20,15 @@ import {
 
 const MainSearch = () => {
   const [query, setQuery] = useState("");
-
-  const jobs = useSelector((state) => state.jobs.results);
-
-  const preferiti = useSelector((state) => state.favorites.list);
-
   const dispatch = useDispatch();
 
-  const handleChange = (e) => {
-    setQuery(e.target.value);
-  };
+  const jobs = useSelector((state) => state.jobs.results);
+  const isLoading = useSelector((state) => state.jobs.isLoading);
+  const isError = useSelector((state) => state.jobs.isError);
+  const preferiti = useSelector((state) => state.favorites.list);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Non faccio più la fetch qu.. ma
-    // Dispatch l'azione asincrona che si occuperà di tutto
     dispatch(getJobsAction(query));
   };
 
@@ -38,10 +39,9 @@ const MainSearch = () => {
           xs={10}
           className="mx-auto my-3 d-flex justify-content-between align-items-center"
         >
-          <h1 className="display-1">Remote Jobs Search</h1>
-
+          <h1 className="display-1">Remote Jobs</h1>
           <Link to="/favorites" className="btn btn-outline-primary">
-            I Miei Preferiti ({preferiti.length})
+            Preferiti ({preferiti.length})
           </Link>
         </Col>
 
@@ -50,38 +50,52 @@ const MainSearch = () => {
             <Form.Control
               type="search"
               value={query}
-              onChange={handleChange}
-              placeholder="type and press Enter"
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Cerca un lavoro e premi Invio"
             />
           </Form>
         </Col>
 
         <Col xs={10} className="mx-auto mb-5 mt-4">
-          {jobs.map((jobData) => {
-            const isFav = preferiti.some((fav) => fav._id === jobData._id);
+          {isLoading && (
+            <div className="text-center my-5">
+              <Spinner animation="border" variant="primary" />
+              <p>Caricamento in corso...</p>
+            </div>
+          )}
 
-            return (
-              <div key={jobData._id} className="d-flex align-items-center mb-2">
-                <div className="flex-grow-1">
-                  <Job data={jobData} />
-                </div>
+          {isError && (
+            <Alert variant="danger">
+              Ouch! Errore nel recupero dei dati. Riprova tra poco.
+            </Alert>
+          )}
 
-                <Button
-                  variant={isFav ? "warning" : "outline-warning"}
-                  className="ms-3"
-                  onClick={() => {
-                    if (isFav) {
-                      dispatch(removeFavoritesAction(jobData._id));
-                    } else {
-                      dispatch(addToFavoriteAction(jobData));
-                    }
-                  }}
+          {!isLoading &&
+            !isError &&
+            jobs.map((jobData) => {
+              const isFav = preferiti.some((fav) => fav._id === jobData._id);
+              return (
+                <div
+                  key={jobData._id}
+                  className="d-flex align-items-center mb-2"
                 >
-                  {isFav ? <StarFill size={18} /> : <Star size={18} />}
-                </Button>
-              </div>
-            );
-          })}
+                  <div className="flex-grow-1">
+                    <Job data={jobData} />
+                  </div>
+                  <Button
+                    variant={isFav ? "warning" : "outline-warning"}
+                    className="ms-3"
+                    onClick={() =>
+                      isFav
+                        ? dispatch(removeFavoritesAction(jobData._id))
+                        : dispatch(addToFavoriteAction(jobData))
+                    }
+                  >
+                    {isFav ? <StarFill size={18} /> : <Star size={18} />}
+                  </Button>
+                </div>
+              );
+            })}
         </Col>
       </Row>
     </Container>
