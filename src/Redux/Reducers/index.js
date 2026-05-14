@@ -1,37 +1,16 @@
-import { ADD_TO_FAVORITES, REMOVE_FAVORITES } from "../actions";
+import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import favoritesReducer from "./favorite";
+import jobsReducer from "./arrayRicerca";
 
-const initialState = {
-  favorites: {
-    list: [],
-  },
-};
+const rootReducer = combineReducers({
+  favorites: favoritesReducer,
+  jobs: jobsReducer,
+});
 
-const mainReducers = (state = initialState, action) => {
-  switch (action.type) {
-    case ADD_TO_FAVORITES:
-      return {
-        ...state,
-        favorites: {
-          ...state.favorites,
-          list: [...state.favorites.list, action.payload],
-        },
-      };
+const store = configureStore({
+  reducer: rootReducer,
+});
 
-    case REMOVE_FAVORITES:
-      return {
-        ...state,
-        favorites: {
-          ...state.favorites,
+export default store;
 
-          list: state.favorites.list.filter(
-            (azienda) => azienda._id !== action.payload,
-          ),
-        },
-      };
-
-    default:
-      return state;
-  }
-};
-
-export default mainReducers;
+//combino i due reducers

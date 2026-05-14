@@ -4,37 +4,31 @@ import { useSelector, useDispatch } from "react-redux";
 import { Star, StarFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import Job from "./Job";
-import { addToFavoriteAction, removeFavoritesAction } from "../Redux/actions";
+
+import {
+  addToFavoriteAction,
+  removeFavoritesAction,
+  getJobsAction,
+} from "../Redux/actions";
 
 const MainSearch = () => {
   const [query, setQuery] = useState("");
-  const [jobs, setJobs] = useState([]);
 
-  const dispatch = useDispatch();
+  const jobs = useSelector((state) => state.jobs.results);
 
   const preferiti = useSelector((state) => state.favorites.list);
 
-  const baseEndpoint =
-    "https://strive-benchmark.herokuapp.com/api/jobs?search=";
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setQuery(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const response = await fetch(baseEndpoint + query + "&limit=20");
-      if (response.ok) {
-        const { data } = await response.json();
-        setJobs(data);
-      } else {
-        alert("Error fetching results");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // Non faccio più la fetch qu.. ma
+    // Dispatch l'azione asincrona che si occuperà di tutto
+    dispatch(getJobsAction(query));
   };
 
   return (
