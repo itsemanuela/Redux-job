@@ -11,7 +11,7 @@ export const addToFavoriteAction = (jobData) => {
   };
 };
 
-export const removeFavorites = (id) => {
+export const removeFavoritesAction = (id) => {
   return {
     type: REMOVE_FAVORITES,
     payload: id,
