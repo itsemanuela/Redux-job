@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Star, StarFill } from "react-bootstrap-icons";
 import { Link } from "react-router-dom";
 import Job from "./Job";
+import { addToFavoriteAction, removeFavorites } from "../Redux/actions";
 
 const MainSearch = () => {
   const [query, setQuery] = useState("");
@@ -76,12 +77,9 @@ const MainSearch = () => {
                   className="ms-3"
                   onClick={() => {
                     if (isFav) {
-                      dispatch({
-                        type: "REMOVE_FAVORITES",
-                        payload: jobData._id,
-                      });
+                      dispatch(removeFavorites(jobData._id));
                     } else {
-                      dispatch({ type: "ADD_TO_FAVORITES", payload: jobData });
+                      dispatch(addToFavoriteAction(jobData));
                     }
                   }}
                 >

@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Star, StarFill } from "react-bootstrap-icons";
+import { ADD_TO_FAVORITES, REMOVE_FAVORITES } from "../Redux/actions";
 
 const FavoriteButton = ({ data }) => {
   const dispatch = useDispatch();
@@ -11,9 +12,9 @@ const FavoriteButton = ({ data }) => {
       style={{ cursor: "pointer" }}
       onClick={() => {
         if (isFav) {
-          dispatch({ type: "REMOVE_FAVORITES", payload: data._id });
+          dispatch({ type: REMOVE_FAVORITES, payload: data._id });
         } else {
-          dispatch({ type: "ADD_TO_FAVORITES", payload: data });
+          dispatch({ type: ADD_TO_FAVORITES, payload: data });
         }
       }}
     >
